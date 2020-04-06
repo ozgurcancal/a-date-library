@@ -15,19 +15,9 @@
 const int Date::md[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 const std::string Date::my[12] = { "ocak","subat","mart","nisan","mayis","haziran","temmuz","agustos","eylul","ekim","kasim","aralik" };
 
-Date::Date() {
-
-	day = 1;
-	month = 2;
-	year = 1900;
-
-}
-
-Date::Date(int d, int m, int y) {
-	day = d;
-	month = m;
-	year = y;
-}
+Date::Date() :day{ 1 }, month{ 2 }, year{ 1990 } {	}
+	
+Date::Date(int d, int m, int y) : day{ d }, month{ m }, year{ y } {	}
 
 Date::Date(const char* input) {
 	if (std::sscanf(input, "%d/%d/%d", &day, &month, &year));
