@@ -422,13 +422,26 @@ std::istream& operator >> (std::istream& is, Date& d) {
 
 int main()
 {
-	//*****test kodları**********//
+	//******test kodu 1**********//
 	Date today{ 23, 2, 2020 };
 	Date future_date{ 15, 1, 2021 };
 
 	while (today < future_date) {
 		std::cout << today++ << "\n";
 	}
+	
+	//******test kodu 2**********//
+	using namespace std;
+
+	vector<Date> myvec;
+	for (int i = 0; i < 20'000; ++i) {
+		myvec.push_back(Date::random());
+	}
+	sort(myvec.begin(), myvec.end());
+	ofstream ofs{ "tarihler.txt" };
+	for (const auto &date : myvec)
+		ofs << date << "\n";
+	
 }
 
 
