@@ -213,13 +213,13 @@ Date& Date:: operator-=(int x) {
 	return gun_cikar(*this, x);
 }
 
-Date& Date:: operator++() {  //ön ek
+Date& Date:: operator++() { 
 
 
 	return gun_topla(*this, 1);
 }
 
-Date Date::operator++(int) {  //son ek    
+Date Date::operator++(int) {   
 
 	Date temp{ *this };
 
@@ -309,7 +309,7 @@ bool operator!=(const Date& self, const Date& obj) {
 }
 
 
-int operator-(const Date& self, const Date& obj) {  //iki tarihi çıkaran operator fonksiyon
+int operator-(const Date& self, const Date& obj) { 
 
 	int day_self = self.year * 365 + self.number_of_leapyear() + self.month_to_date() + self.day;
 	int day_obj = obj.year * 365 + obj.number_of_leapyear() + obj.month_to_date() + obj.day;
@@ -318,7 +318,7 @@ int operator-(const Date& self, const Date& obj) {  //iki tarihi çıkaran opera
 
 }
 
-Date operator+(Date& date, int n) {   // tarihten n gün sonrasını veren fonksiyon
+Date operator+(Date& date, int n) {  
 
 	return date.gun_topla(date, n);
 }
@@ -350,7 +350,7 @@ Date::WeekDay& weekday_azalt(Date::WeekDay& r) {
 
 }
 
-Date::WeekDay& operator++(Date::WeekDay& r) {  //enum öğelerinde değişiklik yapamazsın!! r önceden başka bir öğeyi referans gsteriyordu şimdi başka
+Date::WeekDay& operator++(Date::WeekDay& r) {  
 
 	return weekday_arttir(r);
 
@@ -381,7 +381,7 @@ Date::WeekDay& operator--(Date::WeekDay& r, int) {
 
 }
 
-std::ostream& operator<<(std::ostream& os, const Date::WeekDay& f) { // f weekdayi kopyalamak yerine referans yoluya erişmiş
+std::ostream& operator<<(std::ostream& os, const Date::WeekDay& f) { 
 
 
 	int Val = static_cast<int>(f);
