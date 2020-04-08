@@ -422,6 +422,7 @@ std::istream& operator >> (std::istream& is, Date& d) {
 
 int main()
 {
+	//*****test kodları**********//
 	Date today{ 23, 2, 2020 };
 	Date future_date{ 15, 1, 2021 };
 
