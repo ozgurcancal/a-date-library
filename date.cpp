@@ -1,25 +1,26 @@
-﻿
+
 #define _CRT_SECURE_NO_WARNINGS
 
 
 #include <iostream>
 #include<iomanip>
-#include "Date.h"
+#include "date.h"
 #include <sstream>
 #include<ctime>
 #include <map>
 #include <cstdlib>
 #include <chrono>
 #include <locale.h>
-
-const int Date::md[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-const std::string Date::my[12] = { "ocak","subat","mart","nisan","mayis","haziran","temmuz","agustos","eylul","ekim","kasim","aralik" };
+#include <vector>
+#include <random>
+#include<fstream>
 
 Date::Date() :day{ 1 }, month{ 2 }, year{ 1990 } {	}
-	
+
 Date::Date(int d, int m, int y) : day{ d }, month{ m }, year{ y } {	}
 
 Date::Date(const char* input) {
+
 	if (std::sscanf(input, "%d/%d/%d", &day, &month, &year));
 	else
 		std::cout << "pars ederken hata meydana geldi!!";
@@ -32,6 +33,9 @@ Date::Date(std::time_t timer) {
 	month = ptr->tm_mon + 1;
 	year = ptr->tm_year;
 }
+
+int Date::md[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+const std::string Date::my[12] = { "ocak","subat","mart","nisan","mayis","haziran","temmuz","agustos","eylul","ekim","kasim","aralik" };
 
 int Date::get_month_day() const {
 
@@ -61,10 +65,14 @@ int Date::get_year_day() const {
 	return d;
 }
 
+Date::WeekDay Date::get_week_day(const Date& date) const { 
 
-Date::WeekDay Date::get_week_day() const {
+	Date d{ 23,2,2020 };
+	int wd = 0;   //23 şubat 2020 tarihi pazar gününe denk gelmektedir ve istenilen günün değeri bu gün ismine göre hesaplanır.
 
-	int i = ptr->tm_wday;
+	int i = ((date - d) + wd) % 7;
+	if (i < 0)
+		i += 7;
 
 	std::map<int, WeekDay> m;
 	m[0] = WeekDay::Sunday;
@@ -74,7 +82,6 @@ Date::WeekDay Date::get_week_day() const {
 	m[4] = WeekDay::Thursday;
 	m[5] = WeekDay::Friday;
 	m[6] = WeekDay::Saturday;
-
 
 	WeekDay a = m[i];
 
@@ -108,27 +115,22 @@ Date& Date::set(int d, int m, int y) {
 	return *this;
 }
 
-
-void Date::print_date() {
-
-	std::printf("%02d-%02d-%04d ", day, month, year);  
-}
-
-
 Date& Date::gun_cikar(Date& date, int x)const {
 
+	if (isleap(year))  
+		md[1] = 29;
 
-	int& gün = date.day; int& ay = date.month; int& yıl = date.year;
+	int& gun = date.day; int& ay = date.month; int& yil = date.year;
 
-	gün = gün - x;
+	gun = gun - x;   //günden istenilen değer çıkarılır, eğer negatifse aydan gün alınır ay negatif olursa yıldan ay alınır.
 
-	while (gün < 1) {
+	while (gun < 1) {   
 		ay--;
 		while (ay < 1) {
-			yıl--;
+			yil--;
 			ay = 12 + ay;
 		}
-		gün = md[ay - 1] + gün;
+		gun = md[ay - 1] + gun;
 
 	}
 
@@ -138,44 +140,54 @@ Date& Date::gun_cikar(Date& date, int x)const {
 Date& Date::gun_topla(Date& date, int x)const {     
 
 
-	int& gün = date.day; int& ay = date.month; int& yıl = date.year;
+	int& gun = date.day; int& ay = date.month; int& yil = date.year;
 
-	gün = gün + x;
 
-	if (ay > 0) {
+	gun = gun + x;
+	if (isleap(year))
+		md[1] = 29;
 
-		while (gün > md[ay - 1]) {
 
-			gün = gün - md[ay - 1];
-			ay++;
+	while (gun > (md[ay - 1])) {   //?????  	Warning	C6385	Reading invalid data from 'md':  the readable size is '48' bytes, but '-8' bytes may be read.	
 
-			while (ay > 12)
-			{
-				ay = 12 - ay;
-				yıl++;
-			}
+
+		gun = gun - (md[ay - 1]);
+		ay++;
+
+		while (ay > 12)
+		{
+			ay = 12 - ay;
+			yil++;
 		}
+
 	}
+
 	return date;
 
 }
 
-int Date::month_to_date(int month)const {
+int Date::month_to_date()const {
 
+	if (isleap(year))
+		md[1] = 29;
+
+	unsigned m = (month);
 	int day = 0;
-	while (month) {
-		day += md[month];
-		month--;
+
+	while (--m) {
+		day += md[m - 1];
 	}
 
 	return day;
 }
 
 int Date::number_of_leapyear()const {
+
 	int count = 0;
 	int y = year;
-	while (y--) {
-		if (((year % 4 == 0) && (year % 100 != 0)) || (year % 400)) {
+
+	while (--y) {
+		if (((y % 4 == 0) && (y % 100 != 0)) || (y % 400 == 0)) {
 
 			count++;
 		}
@@ -245,16 +257,15 @@ Date Date::random_date() {
 	return rast;
 }
 
-constexpr bool Date::isleap(int year) {
+bool  Date::isleap(int year) {
 
 	if (((year % 4 == 0) && (year % 100 != 0)) || (year % 400)) {
-		std::cout << "girdiginiz yil bir artik yildir";
+
 		return 1;
 	}
-	else {
-		std::cout << "girdiginiz yil artik yil degil";
-		return 0;
-	}
+
+	return 0;
+
 }
 
 
@@ -284,7 +295,6 @@ bool operator>=(const Date& self, const Date& obj) {
 
 	return !(self < obj);
 }
-
 bool operator==(const Date& self, const Date& obj) {
 
 	if (self.year == obj.year && self.month == obj.month && self.day == obj.day)
@@ -298,26 +308,17 @@ bool operator!=(const Date& self, const Date& obj) {
 	return !(self == obj);
 }
 
-int operator-(const Date& self, const Date& obj) {  //iki tarihi çıkaran fonksiyon
 
-	if (self > obj) {  //eğer bizim tarihimiz çıkarılan tarihten büyükse güne çevirilmiş tarihleri birbirinden çıkar.
+int operator-(const Date& self, const Date& obj) {  //iki tarihi çıkaran operator fonksiyon
 
-		int day = (self.year - obj.year) * 365 + self.number_of_leapyear() - obj.number_of_leapyear() + (self.month_to_date(self.month) - obj.month_to_date(obj.month)) + (self.day - obj.day);
+	int day_self = self.year * 365 + self.number_of_leapyear() + self.month_to_date() + self.day;
+	int day_obj = obj.year * 365 + obj.number_of_leapyear() + obj.month_to_date() + obj.day;
 
-		std::cout << "iki tarih arasinda " << day << " gun fark var";
-
-		return day;
-	}
-
-	else {
-		std::cout << "ikinci deger daha buyuk hata degeri: ";
-		return -1;  //hata degeri olarak -1 donduruldu
-	}
+	return day_self - day_obj;
 
 }
 
 Date operator+(Date& date, int n) {   // tarihten n gün sonrasını veren fonksiyon
-
 
 	return date.gun_topla(date, n);
 }
@@ -329,7 +330,7 @@ Date operator+(int n, Date& date) {
 }
 
 
-Date::WeekDay& weekday_arttır(Date::WeekDay& r) {
+Date::WeekDay& weekday_arttir(Date::WeekDay& r) {
 
 	int a = (static_cast<int>(r) + 1);
 	if (a > 6)
@@ -338,6 +339,7 @@ Date::WeekDay& weekday_arttır(Date::WeekDay& r) {
 	return r;
 
 }
+
 Date::WeekDay& weekday_azalt(Date::WeekDay& r) {
 
 	int a = (static_cast<int>(r) - 1);
@@ -348,37 +350,38 @@ Date::WeekDay& weekday_azalt(Date::WeekDay& r) {
 
 }
 
-Date::WeekDay& operator++(Date::WeekDay& r) {  
+Date::WeekDay& operator++(Date::WeekDay& r) {  //enum öğelerinde değişiklik yapamazsın!! r önceden başka bir öğeyi referans gsteriyordu şimdi başka
 
-	return weekday_arttır(r);
+	return weekday_arttir(r);
+
 }
 
 Date::WeekDay& operator++(Date::WeekDay& r, int) {
 
 	Date::WeekDay static temp{ r };
 
-	weekday_arttır(r);
+	++r;
 
 	return temp;
 
 }
 Date::WeekDay& operator--(Date::WeekDay& r) {
 
-
 	return weekday_azalt(r);
 
 }
+
 Date::WeekDay& operator--(Date::WeekDay& r, int) {
 
 	Date::WeekDay static temp{ r };
 
-	weekday_azalt(r);
+	--r;
 
 	return temp;
 
 }
 
-std::ostream& operator<<(std::ostream& os, const Date::WeekDay& f) { 
+std::ostream& operator<<(std::ostream& os, const Date::WeekDay& f) { // f weekdayi kopyalamak yerine referans yoluya erişmiş
 
 
 	int Val = static_cast<int>(f);
@@ -386,9 +389,9 @@ std::ostream& operator<<(std::ostream& os, const Date::WeekDay& f) {
 	switch (Val) {
 	case 0:return os << "Pazar";
 	case 1:return os << "Pazartesi";
-	case 2:return os << "Salı";
-	case 3:return os << "Çarşamba";
-	case 4:return os << "Perşembe";
+	case 2:return os << "Sali";
+	case 3:return os << "Carsamba";
+	case 4:return os << "Persembe";
 	case 5:return os << "Cuma";
 	case 6:return os << "Cumartesi";
 	default: return os << Val;
@@ -397,9 +400,15 @@ std::ostream& operator<<(std::ostream& os, const Date::WeekDay& f) {
 
 std::ostream& operator << (std::ostream& os, const Date& d) {
 
-	os << d.day << " " << d.my[d.month - 1] << " " << d.year << " " << d.get_week_day();
+	os << d.day << " " << d.my[d.month - 1] << " " << d.year << " " << d.get_week_day(d);
 
 	return os;
+}
+std::ofstream& operator << (std::ofstream& ofs, Date& d) {
+
+	ofs << d.day << " " << d.my[d.month - 1] << " " << d.year << " " << d.get_week_day(d);
+
+	return ofs;
 }
 
 std::istream& operator >> (std::istream& is, Date& d) {
@@ -409,3 +418,16 @@ std::istream& operator >> (std::istream& is, Date& d) {
 
 	return is;
 }
+
+
+int main()
+{
+	Date today{ 23, 2, 2020 };
+	Date future_date{ 15, 1, 2021 };
+
+	while (today < future_date) {
+		std::cout << today++ << "\n";
+	}
+}
+
+
