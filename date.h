@@ -64,7 +64,7 @@ public:
 
 	static bool isleap(int y); //26	Artık yıl testi yapan sınıfın static üye işlevi.
 
-	friend std::ostream& operator << (std::ostream& out, const Date::WeekDay& b);   //haftanın gününü yazdıran global operator işlevi
+	friend std::ostream& operator << (std::ostream& out, const Date::WeekDay b);   //haftanın gününü yazdıran global operator işlevi
 
 	friend bool operator<(const Date&, const Date&);
 	friend bool operator==(const Date&, const Date&);
@@ -92,8 +92,6 @@ Date::WeekDay& operator++(Date::WeekDay& r, int); //30
 Date::WeekDay& operator--(Date::WeekDay& r); //30	
 Date::WeekDay& operator--(Date::WeekDay& r, int); //30
 //
-Date::WeekDay& weekday_arttir(Date::WeekDay& r);
-Date::WeekDay& weekday_azalt(Date::WeekDay& r);
 
 std::ostream& operator<<(std::ostream& os, const Date& date); //31		Date nesnelerinin değerlerini çıkış akımlarına yazdıracak global operatör işlevi (inserter) Formatlama şöyle olmalı: 31 Ekim 2019 Persembe
 std::istream& operator>>(std::istream& is, Date& date); //32	Date nesnelerine giriş akımlarından aldığı karakterlerden oluşturulacak değeri yerleştiren global operatör işlevi(extractor) Formatlama: gg / aa / yyyy(ayıraç olarak istenilen bir karakter kullanılabilir.
