@@ -329,59 +329,36 @@ Date operator+(int n, Date& date) {
 	return date.gun_topla(date, n);
 }
 
-
-Date::WeekDay& weekday_arttir(Date::WeekDay& r) {
-
-	int a = (static_cast<int>(r) + 1);
-	if (a > 6)
-		a = a % 7;
-	r = static_cast<Date::WeekDay>(a);
-	return r;
-
+Date::WeekDay& operator++(Date::WeekDay& wd) {  
+	
+	return wd = (wd == Date::WeekDay::Saturday ? Date::WeekDay::Sunday : static_cast<Date::WeekDay>(static_cast<int>(wd) + 1));
 }
 
-Date::WeekDay& weekday_azalt(Date::WeekDay& r) {
+Date::WeekDay& operator++(Date::WeekDay& wd, int) {
 
-	int a = (static_cast<int>(r) - 1);
-	if (a < 0)
-		a += 7;
-	r = static_cast<Date::WeekDay>(a);
-	return r;
+	Date::WeekDay temp{ wd };
 
-}
-
-Date::WeekDay& operator++(Date::WeekDay& r) {  
-
-	return weekday_arttir(r);
-
-}
-
-Date::WeekDay& operator++(Date::WeekDay& r, int) {
-
-	Date::WeekDay static temp{ r };
-
-	++r;
-
-	return temp;
-
-}
-Date::WeekDay& operator--(Date::WeekDay& r) {
-
-	return weekday_azalt(r);
-
-}
-
-Date::WeekDay& operator--(Date::WeekDay& r, int) {
-
-	Date::WeekDay static temp{ r };
-
-	--r;
+	++wd;
 
 	return temp;
 
 }
 
-std::ostream& operator<<(std::ostream& os, const Date::WeekDay& f) { 
+Date::WeekDay& operator--(Date::WeekDay& wd) {
+
+	return wd = (wd == Date::WeekDay::Sunday ? Date::WeekDay::Saturday : static_cast<Date::WeekDay>(static_cast<int>(wd) - 1));
+}
+
+Date::WeekDay& operator--(Date::WeekDay& wd, int) {
+
+	Date::WeekDay static temp{ wd };
+
+	--wd;
+
+	return temp;
+}
+
+std::ostream& operator<<(std::ostream& os, const Date::WeekDay f) { 
 
 	static const char* const p[] = { "Pazar", "Pazartesi", "Sali","Carsamba", "Persembe", "Cuma", "Cumartesi" };
 	return os << p[static_cast<int>(f)];
@@ -430,6 +407,13 @@ int main()
 	ofstream ofs{ "tarihler.txt" };
 	for (const auto &date : myvec)
 		ofs << date << "\n";
+	
+	//******test kodu 3**********//
+	Date::WeekDay wd{ Date::WeekDay::Sunday };
+
+	for (int i = 0; i < 10; ++i) {
+		std::cout << wd++ << " ";
+	}
 	
 }
 
