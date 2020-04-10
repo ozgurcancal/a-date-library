@@ -383,19 +383,8 @@ Date::WeekDay& operator--(Date::WeekDay& r, int) {
 
 std::ostream& operator<<(std::ostream& os, const Date::WeekDay& f) { 
 
-
-	int Val = static_cast<int>(f);
-
-	switch (Val) {
-	case 0:return os << "Pazar";
-	case 1:return os << "Pazartesi";
-	case 2:return os << "Sali";
-	case 3:return os << "Carsamba";
-	case 4:return os << "Persembe";
-	case 5:return os << "Cuma";
-	case 6:return os << "Cumartesi";
-	default: return os << Val;
-	}
+	static const char* const p[] = { "Pazar", "Pazartesi", "Sali","Carsamba", "Persembe", "Cuma", "Cumartesi" };
+	return os << p[static_cast<int>(f)];
 }
 
 std::ostream& operator << (std::ostream& os, const Date& d) {
