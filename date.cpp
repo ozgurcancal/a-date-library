@@ -74,18 +74,9 @@ Date::WeekDay Date::get_week_day(const Date& date) const {
 	if (i < 0)
 		i += 7;
 
-	std::map<int, WeekDay> m;
-	m[0] = WeekDay::Sunday;
-	m[1] = WeekDay::Monday;
-	m[2] = WeekDay::Tuesday;
-	m[3] = WeekDay::Wednesday;
-	m[4] = WeekDay::Thursday;
-	m[5] = WeekDay::Friday;
-	m[6] = WeekDay::Saturday;
+	std::map<int, WeekDay> weekdays{ {0,WeekDay::Sunday},{1,WeekDay::Monday},{2,WeekDay::Tuesday},{3,WeekDay::Wednesday},{4,WeekDay::Thursday},{5,WeekDay::Friday},{6,WeekDay::Saturday} };
 
-	WeekDay a = m[i];
-
-	return a;
+	return  weekdays[i];
 
 }
 
