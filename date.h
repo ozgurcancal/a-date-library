@@ -49,16 +49,16 @@ public:
 	Date& set_year(int year); //16	Tarihin yılını değiştiriyor.
 	Date& set(int day, int mon, int year); //17	Tarihi değiştiriyor.
 
-	Date operator-(int day); //18	Tarihten gün çıkartan const üye operatör işlevi.Geri dönüş değeri elde edilen tarih olacak.
+	Date operator-(int day); //18	Tarihten gün çıkartan const üye operatör işlevi.
 
-	Date& operator+=(int day); //19	Tarihi gelen gün kadar arttıran üye operatör işlevi.Geri dönüş değeri* this 
+	Date& operator+=(int day); //19	Tarihi gelen gün kadar arttıran üye operatör işlevi.
 
-	Date& operator-=(int day); //20 Tarihi gelen gün kadar eksilten üye operatör işlevi.Geri dönüş değeri* this 
-	Date& operator++(); //21		Önek ++ operatörünü yükleyen işlev. (İşlevin referans döndürüyor).
-	Date operator++(int); //22		Sonek ++ operatörünü yükleyen işlev. (İşlevin referans döndürmüyor).
+	Date& operator-=(int day); //20 Tarihi gelen gün kadar eksilten üye operatör işlevi.
+	Date& operator++(); //21		Önek ++ operatörünü yükleyen işlev. 
+	Date operator++(int); //22		Sonek ++ operatörünü yükleyen işlev.
 
-	Date& operator--(); //23	Önek -- operatörünü yükleyen işlev. (İşlevin referans döndürdüğüne dikkat ediniz).
-	Date operator--(int); //24	Sonek -- operatörünü yükleyen işlev. (İşlevin referans döndürmediğine dikkat ediniz).
+	Date& operator--(); //23	Önek -- operatörünü yükleyen işlev. 
+	Date operator--(int); //24	Sonek -- operatörünü yükleyen işlev. 
 
 	static Date random_date(); //25	Artık yıl testi yapan sınıfın static üye işlevi.
 
@@ -87,13 +87,13 @@ int operator-(const Date& d1, const Date& d2); //28	İki tarih arasındaki gün 
 Date operator+(const Date& date, int n); //29	Gelen tarihten n gün sonrasını döndüren global operatör işlevleri
 Date operator+(int n, const Date&); //29
 
-Date::WeekDay& operator++(Date::WeekDay& r); //30  //sadece wwekdayle işimiz var diğer öğelerle bir işimizi olmadığı için friendlik vermeye gerek yok
+Date::WeekDay& operator++(Date::WeekDay& r); //30  
 Date::WeekDay& operator++(Date::WeekDay& r, int); //30
 Date::WeekDay& operator--(Date::WeekDay& r); //30	
 Date::WeekDay& operator--(Date::WeekDay& r, int); //30
 //
 
 std::ostream& operator<<(std::ostream& os, const Date& date); //31		Date nesnelerinin değerlerini çıkış akımlarına yazdıracak global operatör işlevi (inserter) Formatlama şöyle olmalı: 31 Ekim 2019 Persembe
-std::istream& operator>>(std::istream& is, Date& date); //32	Date nesnelerine giriş akımlarından aldığı karakterlerden oluşturulacak değeri yerleştiren global operatör işlevi(extractor) Formatlama: gg / aa / yyyy(ayıraç olarak istenilen bir karakter kullanılabilir.
+std::istream& operator>>(std::istream& is, Date& date); //32	Date nesnelerine giriş akımlarından aldığı karakterlerden oluşturulacak değeri yerleştiren global operatör işlevi(extractor) Formatlama: gg / aa / yyyy.
 
 #endif
