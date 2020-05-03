@@ -17,10 +17,11 @@ private:
 
 	static const std::string my[12];
 
-	Date& gun_cikar(Date&, int)const;   //tarihten istenildiği kadar gün çıkaran üye fonksiyon
+	Date gun_cikar(Date&, int)const;   //tarihten istenildiği kadar gün çıkaran üye fonksiyon
 	int month_to_date()const;	//tarihin sadece aylarını güne dönüştürür
 	int number_of_leapyear()const;   //o yıla kadar kaç artık yıl geçtiğini hesaplayan üye fonksiyon
-
+	
+	bool check_date_validity(int day, unsigned month, int year);
 public:
 
 	struct tm* ptr = localtime(&timer);
@@ -30,7 +31,7 @@ public:
 	static constexpr int random_max_year = 2020;  //3	random_date işlevinin üreteceği tarih için en büyük yıl değeri
 	enum class WeekDay { Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday }; //4	Haftanın günü için enum class türü
 
-	Date& gun_topla(Date&, int)const;  //tarihe istenildiği kadar gün ekleyen üye	fonksiyon
+	Date gun_topla(Date&, int)const;  //tarihe istenildiği kadar gün ekleyen üye	fonksiyon
 	
 	Date(); //5		Varsayılan kurucu işlev: Date nesnesini 01-01-1900 tarihi ile oluşturacak
 	Date(int d, int m, int y);  //6		Date nesnesini gün, ay, yıl değeri ile oluşturacak kurucu işlev
@@ -74,6 +75,15 @@ public:
 	
 	friend std::ostream& operator<<(std::ostream& os, const Date& date); //31
 	friend std::istream& operator>>(std::istream& is, Date& date); //32
+};
+
+class BadDate : public std::exception { 
+
+private:
+	int d = 0, m = 0, y = 0;
+public:
+	BadDate(int day, int month, int year);  
+	const char* what() const noexcept override;
 };
 
 bool operator<(const Date&, const Date&); //27	Date nesnelerinin karşılaştırılmasını sağlayacak global operatör işlevleri
