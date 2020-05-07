@@ -17,7 +17,7 @@ bool Date::check_date_validity(int day, unsigned month, int year) {
 	
 	bool x = (month == 2 && isleap(year) && day > 29) || (day<0 || day>md[month-1]);   //şubatın 29 çektiği yıl hariç hiç bir ay md[] arrayinde belirtilen gün sayısını aşamaz.
 	if ((year < 1900 && month < 0 && month >12 && x))
-		throw BadDate(day, month, year);
+		throw BadDate("gecersiz tarih girdiniz\n");
 	else
 		return 1;
 }
@@ -137,12 +137,13 @@ Date Date::gun_cikar(Date& date, int x)const {
 	if (isleap(year))
 		md[1] = 29;
 	while (gun < 1) {
+		gun = md[ay - 1] + gun;
 		ay--;
 		while (ay < 1) {
 			yil--;
 			ay = 12 + ay;
 		}
-		gun = md[ay - 1] + gun;
+		
 
 	}
 
@@ -179,8 +180,7 @@ Date Date::gun_topla(Date& date, int x)const {
 
 int Date::month_to_date()const {
 	
-	if (isleap(year))
-		md[1] = 29;
+	if (md[1]=isleap(year) ?  29 :  28);
 	
 	unsigned m = (month);
 	int day = 0;
@@ -324,7 +324,11 @@ int operator-(const Date& self, const Date& obj) {
 	int day_self = self.year * 365 + self.number_of_leapyear() + self.month_to_date() + self.day;
 	int day_obj = obj.year * 365 + obj.number_of_leapyear() + obj.month_to_date() + obj.day;
 
-	return day_self - day_obj;
+	if (Date::isleap(self.year) && !Date::isleap(obj.year) && self.month_to_date() + self.day < 60)  //eksilen tarihin yılı artık yıl ise ve 29 şubattan erkense ve çıkan tarih artık yıl değilse ekstra günü ekleme.
+		d--;
+
+
+	return d;
 }
 
 Date operator+(Date& date, int n) {  
@@ -394,14 +398,12 @@ std::istream& operator >> (std::istream& is, Date& d) {
 	return is;
 }
 
-BadDate ::BadDate(int day,int month,int year) : d{ day }, m{ month }, y{ year } {}  
+BadDate ::BadDate(const char* b) :str{ b } {} 
 	
 
 const char* BadDate::what() const noexcept {
 					
-	std::cout << d << "/" << m << "/" << y << " tarihi gecerli bir tarih degil\n";
-		
-	return "bad date";
+	return str;
 }
 
 
