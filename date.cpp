@@ -14,7 +14,7 @@
 #include<fstream>
 
 bool Date::check_date_validity(int day, unsigned month, int year) {
-	bool x = ((month == 2 && isleap(year) && day > 29) || (day<0 || day>md[month-1]));   //şubatın 29 çektiği yıl hariç hiç bir ay md[] arrayinde belirtilen gün sayısını aşamaz.
+	bool x = (month == 2 && isleap(year) && day > 29) || day<0 || (!isleap(year) && day>md[month-1]);   //şubatın 29 çektiği yıl hariç hiç bir ay md[] arrayinde belirtilen gün sayısını aşamaz.
 	if ((year < 1900 || month < 0 || month >12 || x))
 		throw BadDate("gecersiz tarih girdiniz\n");
 	else
