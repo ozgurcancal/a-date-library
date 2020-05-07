@@ -80,9 +80,9 @@ public:
 class BadDate : public std::exception { 
 
 private:
-	int d = 0, m = 0, y = 0;
+	const char* str;
 public:
-	BadDate(int day, int month, int year);  
+	BadDate(const char* b);  
 	const char* what() const noexcept override;
 };
 
