@@ -35,8 +35,8 @@ public:
 	
 	Date(); //5		Varsayılan kurucu işlev: Date nesnesini 01-01-1900 tarihi ile oluşturacak
 	Date(int d, int m, int y);  //6		Date nesnesini gün, ay, yıl değeri ile oluşturacak kurucu işlev
-	Date(const char* p);  //7		Date nesnesini formatlanmış yazıdan alacağı tarih değeri ile oluşturacak. Format: gg/aa/yil
-	Date(std::time_t timer); //8	Date nesnesini "calender time" değerinden dönüştüreceği tarih değeri ile oluşturacak.
+	Date(const char* p)explicit;  //7		Date nesnesini formatlanmış yazıdan alacağı tarih değeri ile oluşturacak. Format: gg/aa/yil
+	Date(std::time_t timer)explicit; //8	Date nesnesini "calender time" değerinden dönüştüreceği tarih değeri ile oluşturacak.
 
 	int get_month_day()const; //9	Ayın gününü döndürüyor.
 	int get_month()const; //10		Ay değerini döndürüyor. (Ocak 1, Şubat 2, ...)  
